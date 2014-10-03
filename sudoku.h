@@ -3,6 +3,7 @@
 #include<string>
 #include<sstream>
 #include<stdlib.h>
+#include "gridwindow.h"
 
 class sudoku
 {
@@ -21,10 +22,14 @@ class sudoku
 			protected:	
 
 		};
+
 		sudoku();
+		bool initPuzzle(SudokuEntry gridEntries[9][9]);
+
 		void SolvePuzzle();
 		unsigned int setClusters;
 		void printPuzzle();
+		int getPuzzleValue(int row, int column);
 	protected:
 		bool checkValidCluster(int r,int c,int value);
 		bool checkValidRow(int r,int c,int value);

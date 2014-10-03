@@ -1,46 +1,43 @@
 #include "sudoku.h"
+//#include "gridwindow.h"
 
 using namespace std;
 
-int main()
-{
-	sudoku puzzle;
-	puzzle.SolvePuzzle();
-
-	return 0;
-}
-
 sudoku::sudoku()
 {
-	// Initialize the grid
-	std::string filename = "custom261.txt";
-	setClusters = 0;
-	node::coord curCoord = {0,0};
+}
 
-	// Read in file stream
-	ifstream inputGridFile(filename.c_str());
-	if( inputGridFile.is_open() )
+bool sudoku::initPuzzle(SudokuEntry gridEntries[9][9])
+{
+	std::string valueString = gridEntries[0][0].get_text();
+	int value;
+	setClusters = 0;
+
+	value = atof(valueString.c_str());
+
+	for(unsigned int ii=0;ii<9;ii++)
 	{
-		string s;
-		string value;
-		
-		while(getline(inputGridFile,s))
+		for(unsigned int jj=0;jj<9;jj++)
 		{
-			stringstream ss(s);
-			while( getline(ss,value,',') )
+			valueString = gridEntries[jj][ii].get_text();
+			value = atof(valueString.c_str());
+
+			if(value)
 			{
-				m_grid[curCoord.y][curCoord.x].value = atoi(value.c_str());
-				if( atoi(value.c_str()) != 0 )
-					m_grid[curCoord.y][curCoord.x].set = true;
-				curCoord.x++;
-				if(curCoord.x > 8)
-				{
-					curCoord.x = 0;
-					curCoord.y++;
-				}
+				m_grid[ii][jj].value = value;
+				m_grid[ii][jj].set = true;
 			}
-		}	
+			else
+			{
+				m_grid[ii][jj].value = 0;
+				m_grid[ii][jj].set = false;
+			}
+		}
 	}
+
+	//printPuzzle();
+
+	return true;
 }
 
 // Return true if the newly added number is valid within the 3x3 cluster
@@ -90,8 +87,6 @@ bool sudoku::checkValidColumn(int r,int c,int value)
 void sudoku::SolvePuzzle()
 {
 	RecursiveSolver(0,0);
-
-	printPuzzle();
 	
 }
 
@@ -113,27 +108,26 @@ bool sudoku::RecursiveSolver(int r,int c)
 	if (r > 8)
 		return true;
 
+	// Try all possible values
 	for(unsigned int ii=1;ii<=9;ii++)
 	{
+		// Check if this value works in puzzle
 		if(checkValidCluster(r,c,ii) &&
 		   checkValidRow(r,c,ii) &&
 		   checkValidColumn(r,c,ii)
 		  )
 		{
+			// Set the value
 			m_grid[r][c].value = ii;
+			// Check if future recursive solvers return true
 			if( RecursiveSolver(r,c) )
 				return true;
+			// Reset the value			
 			else
 				m_grid[r][c].value = 0;
 
 		}
-
-		//m_grid[r][c].value = 0;
 	}
-
-	//printPuzzle();
-
-	//m_grid[r][c].value = 0;
 
 	return false;
 }
@@ -154,4 +148,11 @@ void sudoku::printPuzzle()
 		cout << endl;
 	}
 }
+
+int sudoku::getPuzzleValue(int row,int column)
+{
+	return m_grid[row][column].value;
+}
+
+
 	
