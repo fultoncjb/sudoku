@@ -26,7 +26,7 @@ class sudoku
 		sudoku();
 		bool initPuzzle(SudokuEntry gridEntries[9][9]);
 
-		void SolvePuzzle();
+		bool SolvePuzzle();
 		unsigned int setClusters;
 		void printPuzzle();
 		int getPuzzleValue(int row, int column);
@@ -37,3 +37,4 @@ class sudoku
 		bool RecursiveSolver(int r,int c);
 		node m_grid[9][9];
 };
+

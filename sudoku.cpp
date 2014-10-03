@@ -84,9 +84,9 @@ bool sudoku::checkValidColumn(int r,int c,int value)
 	return true;
 }
 
-void sudoku::SolvePuzzle()
+bool sudoku::SolvePuzzle()
 {
-	RecursiveSolver(0,0);
+	return RecursiveSolver(0,0);
 	
 }
 
@@ -156,3 +156,4 @@ int sudoku::getPuzzleValue(int row,int column)
 
 
 	
+

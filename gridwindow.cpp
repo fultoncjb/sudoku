@@ -48,25 +48,36 @@ void GridWindow::on_button_solve_clicked()
 	// Read the contents of the entries
 	sudoku sudokuPuzzle;
 	sudokuPuzzle.initPuzzle(m_entry);
-	sudokuPuzzle.SolvePuzzle();
-	Glib::ustring finalValue;
+	bool result = sudokuPuzzle.SolvePuzzle();
 
-	Gdk::RGBA solutionColor;
-	solutionColor.set_rgba(1.0,0.0,0.0,1.0); 	// red for the solution
-
-	for(unsigned int ii=0;ii<9;ii++)
+	if(result)
 	{
-		for(unsigned int jj=0;jj<9;jj++)
+		Glib::ustring finalValue;
+
+		Gdk::RGBA solutionColor;
+		solutionColor.set_rgba(1.0,0.0,0.0,1.0); 	// red for the solution
+
+		for(unsigned int ii=0;ii<9;ii++)
 		{
-			// Fill in the remaining cells
-			if( m_entry[ii][jj].get_text().empty() )
+			for(unsigned int jj=0;jj<9;jj++)
 			{
-				Glib::ustring finalValue = IntToUString(sudokuPuzzle.getPuzzleValue(jj,ii));
-				m_entry[ii][jj].override_color(solutionColor);
-				m_entry[ii][jj].set_text(finalValue);
-				m_entry[ii][jj].set_editable(false);
+				// Fill in the remaining cells
+				if( m_entry[ii][jj].get_text().empty() )
+				{
+					Glib::ustring finalValue = IntToUString(sudokuPuzzle.getPuzzleValue(jj,ii));
+					m_entry[ii][jj].override_color(solutionColor);
+					m_entry[ii][jj].set_text(finalValue);
+					m_entry[ii][jj].set_editable(false);
+				}
 			}
 		}
+	}
+	else
+	{
+		// Input is not solvable
+		// Inform the user of the error
+		Gtk::MessageDialog dlg("Puzzle cannot be solved. Check the input.");
+		dlg.run();
 	}
 
 }
@@ -124,3 +135,4 @@ Glib::ustring GridWindow::IntToUString(int intVal)
 	Glib::ustring sOut = streamValue.str();
 	return sOut;
 }
+
